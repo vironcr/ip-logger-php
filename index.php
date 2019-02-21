@@ -1,7 +1,16 @@
 <h1>Hello world</h1>
 
  <?php
- $ip = $_SERVER['REMOTE_ADDR']; //get the visitor's IP
+function getIpAddress() {
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ipAddresses = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        return trim(end($ipAddresses));
+    }
+    else {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+}
+ $ip = getIpAddress();
  $country = file_get_contents('http://ipinfo.io/'.$ip); //fetch the country
 $date = date(DATE_RFC822);
 $country = json_decode($country, true)["country"]; //turn the IP string (API) into an array
